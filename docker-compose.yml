@@ -1,0 +1,25 @@
+services:
+  coinnews:
+    image: amirhossein21/coinnews.linux:v0.2
+    ports:
+      - 6700:8000
+    volumes:
+      - ./coinnews/config.yml:/go/src/app/config.yml
+  database:
+    build: database
+    ports:
+      - 6701:3306
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD=true
+  bepa:
+    build: bepa
+    depends_on:
+      - database
+      - coinnews
+  peyk:
+    build: peyk
+    ports:
+      - 6702:80
+    depends_on:
+      - database
+      - coinnews
